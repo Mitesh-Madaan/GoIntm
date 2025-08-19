@@ -67,6 +67,34 @@ go build -race [app]
 go test -race [app]
 ```
 
+### Share memory by communicating
+#### Channel Datatype
+**Declaration**
+```go
+var ch chan int
+```
+**Intitilization**
+```go
+ch = make(chan int)
+```
+**Declaration & Initialization**
+```go
+var ch chan int = make(chan int)
+// OR
+var ch = make(chan int)
+// OR
+ch := make(chan int)
+```
+##### Channel Operations (<-  Operator)
+**Send Operation**
+```go
+ch <- 100
+```
+**Receive Operation**
+```go
+data := <-ch
+```
+
 ## Database Programming
 ## Building REST APIs
 
