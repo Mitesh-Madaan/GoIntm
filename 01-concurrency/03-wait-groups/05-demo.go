@@ -12,9 +12,6 @@ func main() {
 	wg.Add(1) //increment the counter by 1
 	go f1(wg) // scheduling the execution of f1() through the scheduler to be executed in future
 	f2()
-
-	// block so that the scheduler picks f1() for execution
-
 	wg.Wait() // block until the wg counter becomes 0 (default = 0)
 }
 
