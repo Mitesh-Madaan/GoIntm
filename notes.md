@@ -53,6 +53,20 @@ go version
 ### WaitGroup
 - Semaphore based counter
 - Has the ability to block the execution of a function until the counter becomes 0
+### Concurrent Safe State
+#### Detect Data Race
+```shell
+go run -race [app]
+```
+
+```shell
+go build -race [app]
+```
+
+```shell
+go test -race [app]
+```
+
 ## Database Programming
 ## Building REST APIs
 
