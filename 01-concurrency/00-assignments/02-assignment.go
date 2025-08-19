@@ -9,6 +9,9 @@ import (
 	"sync"
 )
 
+var primes []int
+var mutex sync.Mutex
+
 func main() {
 	var start, end int
 	fmt.Println("Enter the start & end :")
@@ -26,7 +29,9 @@ func main() {
 	// wait for the goroutines to complete
 	wg.Wait()
 
-	// print all the generated prime numbers
+	for _, primeNo := range primes {
+		fmt.Println("Prime No :", primeNo)
+	}
 
 }
 
@@ -37,5 +42,9 @@ func PrintIfPrime(no int) {
 			return
 		}
 	}
-	fmt.Println("Prime No :", no) // remove this line
+	mutex.Lock()
+	{
+		primes = append(primes, no)
+	}
+	mutex.Unlock()
 }
