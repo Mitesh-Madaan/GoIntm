@@ -10,42 +10,43 @@ import (
 )
 
 // Communicate by sharing memory
-var primes []int
-var mutex sync.Mutex
 
 func main() {
 	var start, end int
 	fmt.Println("Enter the start & end :")
 	fmt.Scanln(&start, &end)
-	wg := &sync.WaitGroup{}
-	for no := start; no <= end; no++ {
-		wg.Add(1)
-		// executing the "sequential" function as a concurrent operation
-		go func() {
-			defer wg.Done()
-			PrintIfPrime(no)
-		}()
+	primesCh := generatePrimes(start, end)
+	for primeNo := range primesCh {
+		fmt.Printf("Prime No : %d\n", primeNo)
 	}
-
-	// wait for the goroutines to complete
-	wg.Wait()
-
-	for _, primeNo := range primes {
-		fmt.Println("Prime No :", primeNo)
-	}
-
+	fmt.Println("Done!")
 }
 
-// designed to be executed sequentially
-func PrintIfPrime(no int) {
+func generatePrimes(start, end int) <-chan int {
+	primesCh := make(chan int)
+
+	var wg sync.WaitGroup
+	for no := start; no <= end; no++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			if isPrime(no) {
+				primesCh <- no
+			}
+		}()
+	}
+	go func() {
+		wg.Wait()
+		close(primesCh)
+	}()
+	return primesCh
+}
+
+func isPrime(no int) bool {
 	for i := 2; i <= (no / 2); i++ {
 		if no%i == 0 {
-			return
+			return false
 		}
 	}
-	mutex.Lock()
-	{
-		primes = append(primes, no)
-	}
-	mutex.Unlock()
+	return true
 }
