@@ -15,20 +15,33 @@ func main() {
 	var start, end int
 	fmt.Println("Enter the start & end :")
 	fmt.Scanln(&start, &end)
-	primesCh := generatePrimes(start, end)
+	primesCh := generatePrimes(start, end, 3)
 	for primeNo := range primesCh {
 		fmt.Printf("Prime No : %d\n", primeNo)
 	}
 	fmt.Println("Done!")
 }
 
-func generatePrimes(start, end int) <-chan int {
+func produceNumbers(start, end int) <-chan int {
+	noCh := make(chan int)
+	go func() {
+		for no := start; no <= end; no++ {
+			noCh <- no
+		}
+		close(noCh)
+	}()
+	return noCh
+}
+
+func generatePrimes(start, end int, workerCount int) <-chan int {
 	primesCh := make(chan int)
+	noCh := produceNumbers(start, end)
 
 	wg := &sync.WaitGroup{}
-	for no := start; no <= end; no++ {
+	for id := range workerCount {
 		wg.Add(1)
-		go processNo(no, primesCh, wg)
+		fmt.Printf("[generatePrimes] Worker [%d] starting...\n", id)
+		go processNo(id, noCh, primesCh, wg)
 	}
 
 	go func() {
@@ -38,10 +51,13 @@ func generatePrimes(start, end int) <-chan int {
 	return primesCh
 }
 
-func processNo(no int, primesCh chan<- int, wg *sync.WaitGroup) {
+func processNo(id int, noCh <-chan int, primesCh chan<- int, wg *sync.WaitGroup) {
 	defer wg.Done()
-	if isPrime(no) {
-		primesCh <- no
+	for no := range noCh {
+		fmt.Printf("[processNo](%d) processing %d\n", id, no)
+		if isPrime(no) {
+			primesCh <- no
+		}
 	}
 }
 
