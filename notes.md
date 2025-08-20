@@ -95,6 +95,22 @@ ch <- 100
 data := <-ch
 ```
 
+## Context
+- Cancel Propagation
+- context instances implement "context.Context" interface
+    - Done()
+- Creating Contexts
+    - context.Background()
+        - meant to act as the root (top most)
+    - context.WithCancel(parentCtx)
+        - Programmatic cancellation
+    - context.WithTimeout() & context.WithDeadline()
+        - Time based cancellation
+        - Also support programmatic cancellation
+    - context.WithValue()
+        - Meant for sharing data across context hierarchies
+        - Non cancellable
+
 ## Database Programming
 ## Building REST APIs
 
