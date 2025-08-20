@@ -1,5 +1,5 @@
 /*
-Refactor the program in such a way that the "printing of the generated prime numbers" is done in the "main()"
+Replace "Communicate by sharing memory" with "Share memory by communicating", namely "use channels"
 */
 
 package main
