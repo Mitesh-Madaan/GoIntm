@@ -112,6 +112,10 @@ data := <-ch
         - Non cancellable
 
 ## Database Programming
+1. database/sql
+2. sqlx (wrappter on database/sql)
+3. sqlc (code generator)
+4. GORM
 ## Building REST APIs
 
 
